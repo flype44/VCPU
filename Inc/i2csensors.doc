@@ -1,0 +1,452 @@
+TABLE OF CONTENTS
+
+i2csensors.library/--------------Introduction----------------
+i2csensors.library/--------------Installation----------------
+i2csensors.library/--------------Configuration---------------
+i2csensors.library/---------Configuration_keywords-----------
+i2csensors.library/i2c_SensorNum
+i2csensors.library/i2c_ReadSensor
+i2csensors.library/i2c_Obtain
+i2csensors.library/i2c_Release
+i2csensors.library/i2c_Send
+i2csensors.library/i2c_Receive
+
+
+i2csensors.library/i2c_SensorNum               i2csensors.library/i2c_SensorNum
+
+    NAME
+	i2c_SensorNum - determine number of Sensors of specific types 
+
+   SYNOPSIS
+	NSensors = i2c_SensorNum( type )
+	D0                        D0
+
+	LONG i2c_SensorNum(LONG);
+
+   FUNCTION
+        The library parses the configuration files in Devs:Sensors/ in its
+	initialization phase and provides a relatively generic interface 
+	to applications.
+
+	This function obtains the number of defined sensors for a given type.
+	The initial pre-defined types are I2C_VOLTAGE, I2C_CURRENT, I2C_TEMP,
+	I2C_FAN and I2C_PRESSURE. Please see libraries/i2cclass.h for additional
+        future extensions.
+	
+	This function may not be called from interrupt code.
+
+   DESCRIPTION
+        Typical applications group their presented numbers into different
+	classes. Following that concept, the sensor reading in this library
+	is by type. The output of this function is purely informative.
+
+	It must be noted that the user might have specified sensors in the
+	configuration files that are not phyically present or active on the
+	bus. Therefore, errors need to be expected.
+
+   INPUTS
+        type     - one of I2C_VOLTAGE, I2C_CURRENT, I2C_TEMP, ...
+
+   RESULTS
+	NSensors - Number of sensors. If none are specified for the current 
+	           type, the returned value is zero.
+
+   BUGS
+
+   SEE ALSO
+	libraries/i2cclass.h, libraries/i2csensors.h, i2c_ReadSensor()
+i2csensors.library/i2c_ReadSensor              i2csensors.library/i2c_ReadSensor
+
+    NAME
+	i2c_ReadSensor - read from a sensor
+
+   SYNOPSIS
+	Value = i2c_ReadSensor(type, index, unitstring, namestring )
+	D0                     D0    D1     A1          A2
+
+	LONG i2c_ReadSensor(LONG, LONG, BYTE**, BYTE** );
+
+   FUNCTION
+        This function reads from a sensor and returns the measured value 
+	along with the user-defined title of the sensor and the measurement
+	unit.
+	
+	This function may not be called from interrupt code.
+
+   DESCRIPTION
+        Typical applications group their presented numbers into different
+	classes. Following that concept, the sensor reading in this library
+	is by type and index. Please see i2c_SensorNum for more information
+	regarding the defined types. 
+	
+	The index argument starts with index 0 for the first sensor and is
+	to be incremented by 1 for each subsequent sensor.
+
+	The two string arguments are provided to return the proper
+	name and unit strings by the library. 
+	
+	It must be noted that the user might have specified sensors in the
+	configuration files that are not phyically present or active on the
+	bus. Therefore, errors need to be expected.
+
+	By definition, an error may be detected by the case that both
+	unitstring and namestring are zero after this call. 
+	
+	The returned Value is specified as 16.16 fixed point number. If desired,
+	a conversion to floating point could be obtained by multiplying with
+	1/65536.
+
+
+   INPUTS
+        type     - one of I2C_VOLTAGE, I2C_CURRENT, I2C_TEMP, ...
+	index    - index (0, 1, 2, ...)
+	unitstring - storage for the returned measurement unit string pointer
+	namestring - storage for the returned sensor name string pointer
+
+   RESULTS
+        Value    - measured value as 16.16 fixed point number
+
+   BUGS
+
+   SEE ALSO
+	libraries/i2cclass.h, libraries/i2csensors.h, i2c_SensorNum()
+
+i2csensors.library/i2c_Obtain             i2csensors.library/i2c_Obtain
+
+    NAME
+	i2c_Obtain - lock i2c bus for a sequence of read/write operations 
+
+   SYNOPSIS
+	RESULT = i2c_Obtain( i2cAddress )
+	D0                   D0
+
+	LONG i2c_Obtain(LONG);
+
+   FUNCTION
+        Serialize I2C bus access by blocking competing tasks until
+	a read/write cycle is complete.
+
+	This function may not be called from interrupt code.
+
+   DESCRIPTION
+        One potential issue with the i2c.library is that competing
+	tasks may interfere with each other's read/write operations
+	on the bus, especially when a task switch occurs after the
+	prologue of an operation.
+
+	This call was added to ensure that each series of read/write
+	operations can be carried out without interference.
+
+	Currently, only a single semaphore is locked.
+
+        The lock should be released as soon as possible after finishing
+	the command sequence.
+
+   INPUTS
+        I2CAddress - device address for which a lock is desired
+	             or -1 for any.
+
+   RESULTS
+        The call should return a nonzero value for success or FALSE (0)
+	in case of an error.
+
+   BUGS
+
+   SEE ALSO
+	libraries/i2cclass.h, libraries/i2csensors.h, i2c_Release()
+
+i2csensors.library/i2c_Release             i2csensors.library/i2c_Release
+
+    NAME
+	i2c_Release - unlock i2c bus after a sequence of read/write operations 
+
+   SYNOPSIS
+	RESULT = i2c_Release( i2cAddress )
+	D0                    D0
+
+	LONG i2c_Release(LONG);
+
+   FUNCTION
+        Free I2C bus for other callers.
+
+	This function may not be called from interrupt code.
+
+   DESCRIPTION
+        One potential issue with the i2c.library is that competing
+	tasks may interfere with each other's read/write operations
+	on the bus, especially when a task switch occurs after the
+	prologue of an operation.
+
+	This function unlocks the bus such that other tasks may
+	carry out their I2C functionality. It is vital that
+	i2c_Release() is called as soon as the current read/write
+	operation sequence is done.
+
+
+   INPUTS
+        I2CAddress - device address for which a lock was obtained
+
+   RESULTS
+        The call should return just TRUE (1) for success or FALSE (0)
+	in case of an error.
+
+   BUGS
+
+   SEE ALSO
+	libraries/i2cclass.h, libraries/i2csensors.h, i2c_Obtain()
+
+i2csensors.library/i2c_Send             i2csensors.library/i2c_Send
+
+    NAME
+	i2c_Send - send a number of bytes to I2C device
+
+   SYNOPSIS
+	RESULT = i2c_Send( I2CAddress, nbytes, senddata )
+	D0                 D0          D1      A1
+
+	LONG i2c_Send(UBYTE, UWORD, UBYTE *);
+
+   FUNCTION
+        Send 1-n bytes to an I2C address
+
+	This function may not be called from interrupt code.
+
+   DESCRIPTION
+        This is a convenience function that just passes the call
+	through to i2c.library. As long as the functionality in
+	this lib is sufficient for a task at hand, i2c.library
+	doesn't need to be opened manually when using this
+	library, anyway.
+
+	Hence, conventions and return values are the same
+	as with i2c.library.
+
+	Please ensure exclusive device access prior to this
+	call by means of i2c_Obtain() and release the device
+	when done with the read/write sequence.
+
+
+   INPUTS
+        I2CAddress - device address to send to
+	nbytes     - number of data bytes to write
+	senddata   - pointer to data bytes
+
+   RESULTS
+        result mask, same as i2c.library
+
+   BUGS
+
+   SEE ALSO
+	libraries/i2cclass.h, libraries/i2csensors.h, libraries/i2c.h, SendI2C()
+
+i2csensors.library/i2c_Receive          i2csensors.library/i2c_Receive
+
+   NAME
+	i2c_Receive - receive a number of bytes from I2C device
+
+   SYNOPSIS
+	RESULT = i2c_Receive( I2CAddress, nbytes, senddata )
+	D0                    D0          D1      A1
+
+	LONG i2c_Receive(UBYTE, UWORD, UBYTE *);
+
+   FUNCTION
+        Receive 1...n bytes from an I2C address
+
+	This function may not be called from interrupt code.
+
+   DESCRIPTION
+        This is a convenience function that just passes the call
+	through to i2c.library. As long as the functionality in
+	this lib is sufficient for a task at hand, i2c.library
+	doesn't need to be opened manually when using this
+	library, anyway.
+
+	Hence, conventions and return values are the same
+	as with i2c.library.
+
+	Please ensure exclusive device access prior to this
+	call by means of i2c_Obtain() and release the device
+	when done with the read/write sequence.
+
+
+   INPUTS
+        I2CAddress - device address to send to
+	nbytes     - number of data bytes to write
+	senddata   - pointer to data bytes
+
+   RESULTS
+        result mask, same as i2c.library
+
+   BUGS
+
+   SEE ALSO
+	libraries/i2cclass.h, libraries/i2csensors.h, libraries/i2c.h, ReceiveI2C()
+
+
+i2csensors.library/--------------Introduction----------------
+
+This library is to be seen as add-on to existing hardware-software combinations
+regarding I2C bus implementations on the Amiga. There exists a number of 
+different phyical approaches to I2C on the Amiga. These range from parallel and 
+serial port bitbang approaches, clockport interface chips up to Zorro II card
+implementations. All these different ways of setting up an I2C interface require
+appropriate hardware abstraction support.
+
+An established quasi-standard is the I2C.library. Depending on the underlying
+hardware, the appropriate i2c.library variant is to be installed and tested
+first.
+
+While the I2C.library provides the necessary means for hardware abstraction
+and I2C compliant I/O, it was seen to lack a convenient interface to individual
+devices. The i2csensors.library is one proposal to simplify sensor data access 
+for both developers and users.
+
+The term simplify is relative when it comes to I2C. This bus was intended for
+a limited number of simultaneusly active devices in a closed/fixed environment.
+It doesn't come with luxuries like device classes and alongside them generic 
+capabilities most of us came to take for granted with modern designs like USB.
+Moreover, it is known that several I2C capable chips on the market have the same
+I2C Address. On top of these elaborations, many sensor chips are configurable
+to provide different measurements as needed by the implementing party.
+
+In order to provide a level of flexibility for the user, the functionality of 
+this library is configured by text files. This way, the supported hardware is
+not limited to a small subset of available chips. Also, no programming 
+proficiency is required to extend the range of supported devices.
+
+i2csensors.library/--------------Installation----------------
+
+An important prerequisite is to test the I2C hard- and software layer before
+i2csensors.library is set up. Please make sure that the hardware is installed
+properly and the appropriate i2c.library is present in "LIBS:".
+
+The i2clib40 distribution on Aminet contains a helpful utility called "I2CScan".
+That tool scans the I2C bus for active devices. As soon as the installed devices
+are detected at their assigned I2C addresses, you are ready for the next steps.
+
+i2csensors.library consists of two parts. The library itself belongs to "LIBS:".
+
+The second component are the sensors definitions. The active definitions
+reside in "DEVS:Sensors/". It is suggested to move unneeded definitions into
+"SYS:Storage/Sensors/".
+
+Please move the definition(s) for the chips connected to your I2C bus into
+"DEVS:Sensors/".
+
+Once hardware, i2c.library, i2csensors.library and  configuration files are
+in place, a test can be conducted. The distribution of i2csensors.library 
+features a small test and example program, called "simplesensors". Just run it
+from CLI/Shell and it will display the readings for the defined sensors.
+
+i2csensors.library/--------------Configuration---------------
+
+The configuration is accomplished using text files. They follow the
+common "KEY=VALUE" pattern. The configuration distinguishes between
+devices and their individual sensors or measurement capabilities.
+
+A device is defined by a string enclosed in square brackets. White
+spaces are not allowed. The opening bracket must be the first character
+in a line.
+
+Comments also start at the first character in a row. The designation
+for comments is "#" like in un*x shells.
+
+Example contents of the configuration file Devs:Sensors/DS3231.cfg
+# detailed description of keywords and parameters follows below
+[DS3231]
+I2CADDRESS = $d0
+INIT       = 0e3c
+TYPE       = TEMP
+READPRE    = 11
+READBYTES  = 2
+BITOFFSET  = 1
+NUMBITS    = 9
+MUL        = 0.25
+UNIT       = C 
+SIGNBIT    = 0
+
+
+It's up to the user to either provide multiple configuration files
+in DEVS:Sensors/ or to put everything in one file, separated by
+respective [_CHOSEN_DEVICE_HEADER_NAME_] headers.
+
+i2csensors.library/---------Configuration_keywords-----------
+
+I2CADDRESS = I2C device address (once per device), either given in decimal
+             or hexadecimal notation (example: 208 or 0xd0 or $d0c are equivalent)
+	     MANDATORY
+
+INIT       = hexadecimal device init string, no whitespaces allowed,
+             hardware dependent
+             OPTIONAL
+
+TYPE       = type of sensor, valid argument strings 
+             VOLTAGE, CURRENT, TEMP, FAN, PRESSURE
+	     MANDATORY
+
+READPRE    = hexadecimal string to be sent to the device in front of the
+             actual sensor reading phase
+	     OPTIONAL
+
+READBYTES  = number of bytes to read (1-255)
+             MANDATORY
+
+BITOFFSET  = first bit to extract, starting with index 0 for the most 
+             significant bit of the first byte (0-255, default 0)
+             OPTIONAL
+
+NUMBITS    = number of bits to extract for the absolute part, starting at 
+             BITOFFSET (permitted range 1-31, default READBYTES*8)
+             OPTIONAL
+
+SIGNBIT    = bit to extract as negative sign indicator, starting with index 0 for
+             the most significant bit of the first byte (0-255, default: unsigned number)
+             Two`s complement is applied, i.e. the sign is prepended to the
+             number and replicated to all higher order bits up to the MSB.
+             The sign bit is independent of NUMBITS, i.e. in addition to the
+             absolute part.
+	     OPTIONAL
+
+EXTRACTMASK= right aligned mask (NUMBITS bits) which designate which bits from
+             the extracted bits are kept (1) or skipped (0). This option is
+	     useful for cases where there is extraneuos information between
+	     sensor data bits 
+
+WAKEUP     = some sensors are in a relatively deep sleep mode (e.g. AM2320) and
+             need waking up before a read cycle can be performed, so if the
+             argument is 1, a dummy read/write is performed before the actual
+             sensor readout
+
+UNIT       = string for the unit (V, A, K, ...)
+
+
+So far, Integer numbers can be extracted from the values, depending on 
+application either unsigned or signed. Many chips provide fractional integer
+readings. The i2csensors.library implements a linear model for sensor reading
+correction and normalization. The formula is (int_value_read+ADD)*MUL
+
+MUL        = fractional number in decimal notation (mantissa-exponent values 
+             are not implemented as of this writing) for the multiplier 
+             (default: 1)
+	     OPTIONAL
+
+ADD        = fractional number in decimal notation (mantissa-exponent values 
+             are not implemented as of this writing) for the bias (default: 0)
+	     OPTIONAL
+
+There are cases where values are to be handled reciprocal, e.g. fan RPM 
+calculation from tick counters. The directive for such situations is DIVBY. 
+The formula in that case is MUL/(int_value_read+ADD).
+
+DIVBY      = flag, denoting that the MUL constant is to be divided by the
+             sensor value (default: 0)
+	     OPTIONAL
+
+Some recent sensors don't fit the simple linear model. One example is the Bosch 
+BMP280. In order to deal with special requirements, a number of routines have 
+been implemented to support higher order adjustments. Such chips are announced 
+by the "CUSTOM" keyword. The downside of this approach is that special handler 
+code has to be provided by the library.
+
+CUSTOM     = BMP280P or BMP280T

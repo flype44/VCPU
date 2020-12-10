@@ -1,0 +1,10 @@
+##base _I2CSensorsBase
+##bias 30 
+##public
+i2c_SensorNum(type)(D0)
+i2c_ReadSensor(type,index,unitstring,namestring)(D0,D1,A1,A2)
+i2c_Obtain(i2cAddress)(D0)
+i2c_Release(i2cAddress)(D0)
+i2c_Send(i2caddr,nbytes,senddata)(D0,D1,A1)
+i2c_Receive(i2caddr,nbytes,recvdata)(D0,D1,A1)
+##end

@@ -1,0 +1,272 @@
+@database VCPU.guide
+@author "flype"
+@(c) "Copyright (C) 2016-2019 APOLLO-Team."
+@$VER: VCPU.guide 1.0 (01/11/2019)
+@font Dina.font 10
+@wordwrap
+
+@node Main "The VCPU Manual"
+
+@{b}The VCPU Manual@{ub}
+
+@{fg highlight}VCPU@{fg text} is (hopefully) a nice application to monitor and to 
+control some features of your @{fg highlight}APOLLO AC68080 processor@{fg text}.
+
+
+    @{"About       " link About         }  ... About VCPU
+    @{"Installation" link Installation  }  ... How to install
+    @{"Requirements" link Requirements  }  ... Minimum requirements
+    @{"Usage       " link Usage         }  ... How to use it
+    @{"History     " link History       }  ... Changelog and old versions
+    @{"Author      " link Author        }  ... The people behinds this program
+    @{"Copyright   " link Copyright     }  ... Licence informations
+
+
+@{fg highlight}VCPU@{fg text} is free software released under the @{"MIT licence" link Licence}.
+
+Copyright (C) 2016-2019 APOLLO-Team.
+
+@next About
+@endnode
+
+
+
+@node About "About"
+@prev Main
+
+@{b}About :@{ub}
+
+@{fg highlight}VCPU@{fg text} is (hopefully) a nice application to @{b}monitor@{ub} and to 
+@{b}control@{ub} some features of your @{fg highlight}APOLLO AC68080 processor@{fg text}.
+
+The main @{fg highlight}VCPU@{fg text} window display, realtime, the processor @{b}MIPS@{ub}, 
+also @{b}FLOPS@{ub} if available, and some other useful informations. 
+
+In addition, it also provides some controls on the board and 
+the processor from the system menus. Have a look to @{"Usage" link Usage}.
+
+The application offers a fancy graphical user interface, with
+basic skins ability, that makes use of the @{fg highlight}RTG truecolor capa-
+bilities@{fg text} of your P96 setup. It is much better viewed on such 
+colorful RTG screenmodes.
+
+However, @{fg highlight}VCPU@{fg text} will still run on the Amiga legacy chipset 
+screenmodes, thanks to the awesome @{fg highlight}guigfx.library@{fg text}. Please,
+refers to the @{"Requirements" link Requirements} chapter for the pre-requisites.
+
+@{fg highlight}VCPU@{fg text} is fully coded in Motorola M68K assembly, using the 
+HiSoft Devpac 3.18 compiler for Amiga, and with some third
+party tools such as Gimp to prepare the graphical assets.
+
+@next Installation
+@endnode
+
+@node Installation "Installation"
+@prev About
+
+@{b}Installation :@{ub}
+
+The installation of this program on your setup, is very trivial,
+
+simply move the whole folder @{fg highlight}"VCPU"@{fg text} into your prefered directory,
+
+such as into @{fg highlight}"SYS:System/"@{fg text} or into any own partition/folder.
+
+Copy all the files provided in the archive, and all will be OK.
+
+
+@{b}Remarks :@{ub}
+
+No ASSIGN is necessary.
+
+However, there are a number of needed components in your AmigaOS system.
+
+Please read carefully the next @{"Requirements" link Requirements} chapter.
+
+@next Requirements
+@endnode
+
+
+
+@node Requirements "Requirements"
+@prev Installation
+
+@{b}Kickstart requirements@{ub} :
+
+This application require at least a @{fg highlight}Kickstart 3.0@{fg text} or newers.
+
+
+@{b}Hardware requirements@{ub} :
+
+Since @{fg highlight}VCPU@{fg text} stands for "Vampire CPU",
+It will obviously requires an @{fg highlight}APOLLO AC68080 processor@{fg text} like the one 
+into any Vampire accelerator boards (V500, V600, V1200) or the one 
+into the Vampire V4 standalone Amiga-compatible computer.
+
+If the APOLLO AC68080 is NOT detected, the program will NOT launch.
+
+
+@{b}Software requirements@{ub} :
+
+@{fg highlight}VCPU@{fg text} is best viewed (by far) on a @{fg highlight}colorful P96 RTG screenmode@{fg text}.
+You need to install properly this RTG system to your setup in
+order to fully enjoy this program, otherwise the interest will
+be quite limited, to be honest.
+
+@{fg highlight}VCPU@{fg text} loads and use a number of components to work properly.
+Please make sure you have @{fg highlight}the following files installed@{fg text} on your system.
+
+- SYS:Classes:DataTypes/png.datatype
+- SYS:Classes:DataTypes/picture.datatype
+- SYS:Devs/DataTypes/PNG
+- SYS:Devs/DataTypes/PNG.info
+- SYS:Fonts/Dina.font
+- SYS:Fonts/Condensed060.font
+- SYS:Libs/guigfx.library
+- SYS:Libs:i2c.library
+- SYS:Libs:i2csensors.library
+- SYS:Libs/render.library
+- SYS:Libs/reqtools.library
+- SYS:Libs/screennotify.library
+- SYS:Libs/vampire.library
+
+@next Usage
+@endnode
+
+
+
+@node Usage "Program usage"
+@prev Requirements
+
+@{b}Usage :@{ub}
+
+Using @{fg highlight}VCPU@{fg text} is, we hope, pretty obvious.
+
+Double-Click the provided @{fg highlight}VCPU@{fg text} icon from your Workbench. 
+
+The program can be launched from CLI or from the Workbench.
+
+It opens a graphical user interface, and most of the features 
+
+are accessibles from the system menus.
+
+
+@{b}Hardware informations :@{ub}
+
+- Realtime MIPS/FLOPS gauges.
+- Frequency in MHz (70MHz, 77MHz, 84MHz, ...)
+- xFreq Multiplier (x10, x11, x12, ...)
+- FPU status (Enabled, Disabled)
+- Board model (V500, V600, V1200, V4SA, ...)
+- Memory capabilities (Chip, Fast, Slow)
+- Temperature : Obtain your DS3231 RTC temperature.
+- Serial-Number : Obtain your unique identifier.
+
+
+@{b}Hardware control :@{ub}
+
+- FPU status    : Enable/Disable (Reboot is REQUIRED !).
+- SuperScalar   : Enable/Disable.
+- Turtle Mode   : Enable/Disable.
+- FastIDE speed : Select desired speed factor.
+- MicroSD speed : Select desired speed factor.
+- Map ROM file  : Select a ROM, and Map/Reboot.
+
+@next History
+@endnode
+
+
+
+@node History "ChangeLog"
+@prev Usage
+
+@{b}Changelog@{ub} :
+
+@{fg highlight}VCPU 1.0 (November 2019)@{fg text}
+
+- First public released version.
+- Code cleanups.
+- Bug fixes.
+
+@{fg highlight}VCPU 0.1 (November 2019)@{fg text}
+
+- First internal-only version.
+
+@next Author
+@endnode
+
+
+
+@node Author "Author"
+@prev History
+
+@{b}Author :@{ub}
+
+@{fg highlight}VCPU@{fg text} is, for now, fully written by Philippe C. aka @{fg highlight}flype@{fg text},
+
+a team member of the software division of the @{fg highlight}APOLLO-Team@{fg text} group.
+
+Feel free to ask any questions about this application to the author.
+
+
+@{b}You can contact the author here :@{ub}
+
+flype44@gmail.com
+
+
+@{b}You can contact the APOLLO-Team here :@{ub}
+
+http://www.apollo-core.com
+irc freenode #apollo-team
+
+@next Copyright
+@endnode
+
+
+
+@node Copyright "Copyright"
+@prev Author
+
+@{b}Copyright :@{ub}
+
+Copyright (C) 2016-2019 APOLLO-Team.
+
+@{fg highlight}VCPU@{fg text} is free software released under the @{"MIT licence" link Licence}.
+
+
+@{b}Disclaimer :@{ub}
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
+USE @{fg highlight}VCPU@{fg text} AT YOUR OWN RISK, THE @{"AUTHOR" link Author} DOES NOT ASSUME ANY RESPONSABILITY.
+
+@next Copyright
+@endnode
+
+
+
+@node Licence "Licence"
+@prev Copyright
+
+The MIT License (MIT)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+@next Main
+@endnode

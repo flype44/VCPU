@@ -1,0 +1,27 @@
+************************************************************
+* 
+* Program:      VCPU
+* Short:        Vampire CPU monitor tool.
+* Author:       flype
+* Type:         util/moni
+* Version:      0.1 (Novembre 2019)
+* Architecture: m68k-amigaos
+* Requires:     AmigaOS V36+, AC68080
+* Copyright:    (C) 2019 APOLLO-Team
+* Compiler:     Devpac 3.18
+* 
+* Dependancies:
+* 
+* - vampire board
+* - libs:guigfx.library
+* - libs:i2c.library
+* - libs:i2csensors.library
+* - libs:render.library
+* - libs:reqtools.library
+* - libs:screennotify.library
+* - libs:vampire.library
+* - fonts:Dina.font
+* - fonts:Apparent.font
+* - fonts:condensed.font
+* 
+************************************************************
